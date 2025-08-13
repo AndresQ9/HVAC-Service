@@ -5,17 +5,56 @@
   <title>HVAC Service</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; background:#0f172a; color:#e2e8f0; }
-    .wrap { max-width: 720px; margin: 6rem auto; padding: 0 1rem; text-align: center; }
-    h1 { font-size: 2rem; margin-bottom: .25rem; }
-    .id-chip { display:inline-block; margin:.25rem 0 1rem; padding:.3rem .6rem; border:1px solid #334155; border-radius: 999px; font-size:.9rem; color:#93c5fd;}
-    .cards { display:grid; gap:1rem; grid-template-columns: 1fr; margin-top: 1.5rem; }
-    @media (min-width: 640px) { .cards { grid-template-columns: 1fr 1fr; } }
-    .card { background:#111827; border:1px solid #1f2937; border-radius: .75rem; padding:1rem; text-align:left; }
-    .card h2 { margin:.25rem 0 .5rem; font-size:1.1rem; color:#f8fafc; }
-    .btn { display:inline-block; margin-top:.75rem; padding:.65rem 1rem; border-radius:.6rem; background:#2563eb; color:white; text-decoration:none; font-weight:600; }
-    .subtle { color:#94a3b8; font-size:.95rem; }
-    .warning { margin-top:1rem; color:#fca5a5; }
+    :root{
+      --vz-red:#E4002B;     /* Verizon red */
+      --vz-black:#000000;
+      --vz-tan:#F5F1E6;     /* soft tan background */
+      --ink-1:#0B0B0B;
+      --ink-2:#3A3A3A;
+      --ink-muted:#6B7280;
+      --card:#FFFFFF;
+      --border:#E5E7EB;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--vz-tan); color: var(--ink-1);
+    }
+    .wrap{max-width:960px;margin:0 auto;padding:32px 16px}
+    header{
+      background: var(--vz-black); color:white; padding:28px 16px; border-bottom:4px solid var(--vz-red);
+    }
+    header .title{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:12px}
+    .dot{width:14px;height:14px;border-radius:50%;background:var(--vz-red)}
+    h1{font-size:1.75rem;margin:0}
+    .subtle{color:var(--ink-2)}
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 10px;border:1px solid var(--border);border-radius:999px;
+      background:#fff; color:var(--ink-2); font-weight:600;
+    }
+    main{margin-top:28px}
+    .grid{
+      display:grid; gap:16px; grid-template-columns:1fr; margin-top:16px;
+    }
+    @media(min-width:700px){ .grid{ grid-template-columns:1fr 1fr; } }
+    .card{
+      background: var(--card); border:1px solid var(--border); border-radius:14px; padding:18px;
+      box-shadow: 0 1px 0 rgba(0,0,0,.04);
+    }
+    .card h2{margin:.25rem 0 .5rem; font-size:1.15rem}
+    .btn{
+      display:inline-block; margin-top:12px; padding:12px 16px; border-radius:10px;
+      background: var(--vz-red); color:white; text-decoration:none; font-weight:700;
+      border:2px solid var(--vz-red);
+    }
+    .btn.outline{
+      background:transparent; color: var(--vz-red);
+    }
+    .notice{
+      margin-top:14px; color:#B91C1C; font-weight:600;
+    }
+    footer{margin:40px 0 24px; color:var(--ink-muted); font-size:.9rem}
   </style>
 </head>
 <body>
@@ -87,4 +126,5 @@
   </script>
 </body>
 </html>
+
 
