@@ -109,13 +109,10 @@
     ];
     const isValidUnit = id => KNOWN_UNITS.includes(id);
   
-    const unitChip   = document.getElementById('unitChip');
-    // Happy path: show chip and wire links
-    unitChip.textContent = `Unit: ${unitId}`;
-    unitChip.hidden = false;
-    const formLink   = document.getElementById('formLink');
-    const historyLink= document.getElementById('historyLink');
-    const errorBanner= document.getElementById('errorBanner');
+    const unitChip    = document.getElementById('unitChip');
+    const formLink    = document.getElementById('formLink');
+    const historyLink = document.getElementById('historyLink');
+    const errorBanner = document.getElementById('errorBanner');
   
     function showError() {
       errorBanner.classList.add('show','shake');
@@ -123,34 +120,41 @@
       errorBanner.scrollIntoView({behavior:'smooth', block:'center'});
     }
   
-    // Guard: if no/invalid id, disable buttons and show error
+    // If missing/invalid id, disable buttons and show error
     if (!unitId || !isValidUnit(unitId)) {
-      // Disable both links
       [formLink, historyLink].forEach(a => {
         a.setAttribute('aria-disabled','true');
         a.setAttribute('tabindex','-1');
         a.href = '#';
         a.addEventListener('click', (e) => { e.preventDefault(); showError(); });
-        a.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showError(); } });
+        a.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showError(); }
+        });
       });
       showError();
     } else {
       // Happy path: show chip and wire links
-      unitLabel.textContent = `Unit: ${unitId}`;
+      unitChip.textContent = `Unit: ${unitId}`;
       unitChip.hidden = false;
   
       const googleFormBase = "https://docs.google.com/forms/d/e/1FAIpQLSdH5Ix8iNe3ZUc60hm5OjD-Q_Kpzb5WsFMKB7hg0Pf9qBIubA/viewform";
       const unitEntryKey   = "entry.2099728163";
-      const formUrl = `${googleFormBase}?usp=pp_url&${unitEntryKey}=${encodeURIComponent(unitId)}`;
+      const formUrl        = `${googleFormBase}?usp=pp_url&${unitEntryKey}=${encodeURIComponent(unitId)}`;
   
-      const historyUrl = `${location.origin}${location.pathname.replace(/index\.html?$/,'')}history.html?id=${encodeURIComponent(unitId)}`;
+      const historyUrl     = `${location.origin}${location.pathname.replace(/index\.html?$/,'')}history.html?id=${encodeURIComponent(unitId)}`;
   
       formLink.href = formUrl;
       historyLink.href = historyUrl;
+  
+      // Optional: if you don't want new tabs, remove target attributes
+      // formLink.removeAttribute('target');
+      // historyLink.removeAttribute('target');
     }
   </script>
+
 </body>
 </html>
+
 
 
 
