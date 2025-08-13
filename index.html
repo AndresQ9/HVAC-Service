@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>HVAC Service</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; background:#0f172a; color:#e2e8f0; }
+    .wrap { max-width: 720px; margin: 6rem auto; padding: 0 1rem; text-align: center; }
+    h1 { font-size: 2rem; margin-bottom: .25rem; }
+    .id-chip { display:inline-block; margin:.25rem 0 1rem; padding:.3rem .6rem; border:1px solid #334155; border-radius: 999px; font-size:.9rem; color:#93c5fd;}
+    .cards { display:grid; gap:1rem; grid-template-columns: 1fr; margin-top: 1.5rem; }
+    @media (min-width: 640px) { .cards { grid-template-columns: 1fr 1fr; } }
+    .card { background:#111827; border:1px solid #1f2937; border-radius: .75rem; padding:1rem; text-align:left; }
+    .card h2 { margin:.25rem 0 .5rem; font-size:1.1rem; color:#f8fafc; }
+    .btn { display:inline-block; margin-top:.75rem; padding:.65rem 1rem; border-radius:.6rem; background:#2563eb; color:white; text-decoration:none; font-weight:600; }
+    .subtle { color:#94a3b8; font-size:.95rem; }
+    .warning { margin-top:1rem; color:#fca5a5; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>HVAC Service</h1>
+    <div id="unitChip" class="id-chip" hidden></div>
+    <p class="subtle">Choose what you need for this specific unit.</p>
+
+    <div class="cards">
+      <div class="card">
+        <h2>Forms</h2>
+        <p class="subtle">Open the service form pre-filled with this unit’s ID.</p>
+        <a id="formLink" class="btn" href="#" target="_blank" rel="noopener">Open Service Form</a>
+      </div>
+      <div class="card">
+        <h2>History</h2>
+        <p class="subtle">View this unit’s service history and past submissions.</p>
+        <a id="historyLink" class="btn" href="#" target="_blank" rel="noopener">View History</a>
+      </div>
+    </div>
+
+    <div id="warn" class="warning" hidden>Missing or unknown unit ID. Scan the correct QR code.</div>
+  </div>
+
+  <script>
+    // 1) Read unit_id from URL (?id=AC-001)
+    const params = new URLSearchParams(location.search);
+    const unitId = (params.get('id') || '').trim();
+
+    // Optional: validate against a known list (prevents typos)
+    const KNOWN_UNITS = [
+      "8A","8B","4A","4B","9B","7B","9A","CAC-1","CAC-2","PORTABLE 480V",
+      "CRAC-7A","AHU-16","OFFICE HVAC","1A","1B","16","20","17","AHU-20","AHU-18",
+      "AHU-2","OAHU","6A","4D","AHU-17","AHU-15","AHU-6B","AHU-14","AHU-6A","AHU-7C",
+      "AHU-1A","AHU-5A","AHU-10B","AHU-8B"
+    ];
+
+    function isValidUnit(id) { return KNOWN_UNITS.includes(id); }
+
+    const unitChip = document.getElementById('unitChip');
+    const warn = document.getElementById('warn');
+    const formLink = document.getElementById('formLink');
+    const historyLink = document.getElementById('historyLink');
+
+    if (!unitId || !isValidUnit(unitId)) {
+      warn.hidden = false;
+    } else {
+      unitChip.textContent = `Unit: ${unitId}`;
+      unitChip.hidden = false;
+
+      // 2) Build links that carry the unit_id forward
+
+      // -------- Option A: Google Forms prefill --------
+      // Replace FORM_ID and entry.123456 with your actual IDs (see steps below)
+      const googleFormBase = "https://docs.google.com/forms/d/e/1FAIpQLSdH5Ix8iNe3ZUc60hm5OjD-Q_Kpzb5WsFMKB7hg0Pf9qBIubA/viewform";
+      const unitEntryKey = "entry.2099728163"; // <-- change to your Unit ID question's entry key
+      const formUrl = `${googleFormBase}?usp=pp_url&${unitEntryKey}=${encodeURIComponent(unitId)}`;
+
+      // -------- History link options --------
+      // (i) Link to your own /history page that reads ?id=
+      const historyUrl = `https://yourdomain.com/history.html?id=${encodeURIComponent(unitId)}`;
+
+      // (ii) Or link to a dashboard/report that accepts a parameter (e.g., Looker Studio)
+      // const historyUrl = `https://lookerstudio.google.com/reporting/REPORT_ID/page/PAGE?params={"unit_id":"${encodeURIComponent(unitId)}"}`;
+
+      formLink.href = formUrl;
+      historyLink.href = historyUrl;
+    }
+  </script>
+</body>
+</html>
