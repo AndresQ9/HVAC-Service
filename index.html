@@ -15,6 +15,20 @@
       --card:#FFFFFF;
       --border:#E5E7EB;
     }
+    .error {
+      display:none; margin-top:14px; padding:12px 14px; border-radius:10px;
+      background:#FEE2E2; border:1px solid #FCA5A5; color:#7F1D1D; font-weight:600;
+    }
+    .error.show { display:block; }
+    .btn[aria-disabled="true"] {
+       opacity:.45; cursor:not-allowed; pointer-events:none; /* truly blocks clicks */
+    }
+  .shake { animation: shake .3s linear 1; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
     *{box-sizing:border-box}
     body{
       margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
@@ -76,55 +90,65 @@
       </div>
     </div>
 
-    <div id="warn" class="warning" hidden>Missing or unknown unit ID. Scan the correct QR code.</div>
+    <div id="errorBanner" class="error" role="alert" aria-live="assertive">
+    Missing or unknown Unit ID. Please scan the correct QR code.
+    </div>
+
   </div>
 
-  <script>
-    // 1) Read unit_id from URL (?id=AC-001)
+   <script>
+    // Read unit_id from URL (?id=...)
     const params = new URLSearchParams(location.search);
     const unitId = (params.get('id') || '').trim();
-
-    // Optional: validate against a known list (prevents typos)
+  
     const KNOWN_UNITS = [
       "8A","8B","4A","4B","9B","7B","9A","CAC-1","CAC-2","PORTABLE 480V",
       "CRAC-7A","AHU-16","OFFICE HVAC","1A","1B","16","20","17","AHU-20","AHU-18",
       "AHU-2","OAHU","6A","4D","AHU-17","AHU-15","AHU-6B","AHU-14","AHU-6A","AHU-7C",
       "AHU-1A","AHU-5A","AHU-10B","AHU-8B"
     ];
-
-    function isValidUnit(id) { return KNOWN_UNITS.includes(id); }
-
-    const unitChip = document.getElementById('unitChip');
-    const warn = document.getElementById('warn');
-    const formLink = document.getElementById('formLink');
-    const historyLink = document.getElementById('historyLink');
-
+    const isValidUnit = id => KNOWN_UNITS.includes(id);
+  
+    const unitChip   = document.getElementById('unitChip');
+    const unitLabel  = document.getElementById('unitLabel');
+    const formLink   = document.getElementById('formLink');
+    const historyLink= document.getElementById('historyLink');
+    const errorBanner= document.getElementById('errorBanner');
+  
+    function showError() {
+      errorBanner.classList.add('show','shake');
+      setTimeout(()=>errorBanner.classList.remove('shake'), 350);
+      errorBanner.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+  
+    // Guard: if no/invalid id, disable buttons and show error
     if (!unitId || !isValidUnit(unitId)) {
-      warn.hidden = false;
+      // Disable both links
+      [formLink, historyLink].forEach(a => {
+        a.setAttribute('aria-disabled','true');
+        a.setAttribute('tabindex','-1');
+        a.href = '#';
+        a.addEventListener('click', (e) => { e.preventDefault(); showError(); });
+        a.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showError(); } });
+      });
+      showError();
     } else {
-      unitChip.textContent = `Unit: ${unitId}`;
+      // Happy path: show chip and wire links
+      unitLabel.textContent = `Unit: ${unitId}`;
       unitChip.hidden = false;
-
-      // 2) Build links that carry the unit_id forward
-
-      // -------- Option A: Google Forms prefill --------
-      // Replace FORM_ID and entry.123456 with your actual IDs (see steps below)
-      const googleFormBase = "https://docs.google.com/forms/d/e/1FAIpQLSdH5Ix8iNe3ZUc60hm5OjD-Q_Kpzb5WsFMKB7hg0Pf9qBIubA/viewform";
-      const unitEntryKey = "entry.2099728163"; // <-- change to your Unit ID question's entry key
+  
+      const googleFormBase = "https://docs.google.com/forms/d/e/FORM_ID_HERE/viewform";
+      const unitEntryKey   = "entry.2099728163";
       const formUrl = `${googleFormBase}?usp=pp_url&${unitEntryKey}=${encodeURIComponent(unitId)}`;
-
-      // -------- History link options --------
-      // (i) Link to your own /history page that reads ?id=
-      const historyUrl = `https://docs.google.com/spreadsheets/d/1-X5bHu5OJGfyzY9_2ocEiS36SVTrE0qva4DM5xGroqU/edit?gid=2126108334#gid=2126108334`;
-
-      // (ii) Or link to a dashboard/report that accepts a parameter (e.g., Looker Studio)
-      // const historyUrl = `https://lookerstudio.google.com/reporting/REPORT_ID/page/PAGE?params={"unit_id":"${encodeURIComponent(unitId)}"}`;
-
+  
+      const historyUrl = `${location.origin}${location.pathname.replace(/index\.html?$/,'')}history.html?id=${encodeURIComponent(unitId)}`;
+  
       formLink.href = formUrl;
       historyLink.href = historyUrl;
     }
   </script>
 </body>
 </html>
+
 
 
