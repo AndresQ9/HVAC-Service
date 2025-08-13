@@ -110,7 +110,9 @@
     const isValidUnit = id => KNOWN_UNITS.includes(id);
   
     const unitChip   = document.getElementById('unitChip');
-    const unitLabel  = document.getElementById('unitLabel');
+    // Happy path: show chip and wire links
+    unitChip.textContent = `Unit: ${unitId}`;
+    unitChip.hidden = false;
     const formLink   = document.getElementById('formLink');
     const historyLink= document.getElementById('historyLink');
     const errorBanner= document.getElementById('errorBanner');
@@ -149,6 +151,7 @@
   </script>
 </body>
 </html>
+
 
 
 
