@@ -102,10 +102,17 @@
     const unitId = (params.get('id') || '').trim();
   
     const KNOWN_UNITS = [
-      "8A","8B","4A","4B","9B","7B","9A","CAC-1","CAC-2","PORTABLE 480V",
-      "CRAC-7A","AHU-16","OFFICE HVAC","1A","1B","16","20","17","AHU-20","AHU-18",
-      "AHU-2","OAHU","6A","4D","AHU-17","AHU-15","AHU-6B","AHU-14","AHU-6A","AHU-7C",
-      "AHU-1A","AHU-5A","AHU-10B","AHU-8B"
+      "CAC-1","CAC-2","AHU-16", "AHU-20","AHU-18", "AHU-2", "AHU-17","AHU-15","AHU-6B","AHU-14","AHU-6A","AHU-7C",
+      "AHU-1A","AHU-5A","AHU-10B","AHU-8B", "AHU-3A", "AHU-3B", "AHU-1B", "AHU-5B", "AHU-6C", 
+      "AHU-9A", "AHU-9B", "AHU-11A", "AHU-11B", "AHU-12", "AHU-13", "AHU-10A", "AHU-8A", "AHU-7A", 
+      "AHU-7B", "AHU-4A", "AHU-4B", "AHU-4C", "AHU-4D", "CAC-4", "CAC-3", "FCU-5", "FCU-6", "FCU-1",
+      "FCU-3", "FCU-4", "FCU-2", "AHU-19", 
+
+      //Outside units
+      "CU-3A", "CU-3B", "CU-1B", "CU-1A", "CU-2", "CU-5A", "CU-5B", "CU-6A", "CU-6B", "CU-6C",
+      "CU-9A", "CU-9B", "CU-11A", "CU-11B", "CU-14", "CU-15", "CU-16", "CU-12", "CU-13", "CU-10A",
+      "CU-10B", "CU-8A", "CU-8B", "CU-7A", "CU-7B", "CU-7C", "CU-4A", "CU-4B", "CU-4C", "CU-4D",
+      "ACC-4", "ACC-3", "ACC-2", "ACC-1", "HP-5", "HP-6", "HP-1", "HP-3", "HP-4", "HP-2"
     ];
     const isValidUnit = id => KNOWN_UNITS.includes(id);
   
@@ -154,6 +161,7 @@
 
 </body>
 </html>
+
 
 
 
